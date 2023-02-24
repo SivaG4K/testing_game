@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>Game</title>
+  <style>
+    * {
+      padding: 0;
+      margin: 0;
+    }
+
+    body {
+      height: 100%;
+      width: 100%;
+      text-align: center;
+	  background-color: #000;
+    }
+
+    #unity-canvas {
+      position: absolute;
+      left: 0px;
+      top: 0px;
+      width: 100%;
+      height: 100%;
+    }
+
+    #unity-loading-bar {
+      position: absolute;
+      left: 30%;
+      top: 50%;
+      width: 40%;
+      height: 20px;
+      background-color: #fff;
+      border: 5px solid #ccc;
+      border-radius: 20px;
+    }
+
+    #unity-progress-bar {
+      position: absolute;
+      left: 0%;
+      top: 0%;
+      width: 1%;
+      height: 100%;
+      background-color: #ef6817;
+      border-radius: 20px;
+      transition: 400ms linear;
+    }
+	#games4king{
+       position: absolute;
+      left: 0%;
+      top: 15%;
+      width: 100%;
+      height: 25%;
+      object-fit: contain;
+    }
+	#android{
+       position: absolute;
+      left: 0%;
+      bottom: 15%;
+      width: 100%;
+      height: 25%;
+      object-fit: contain;
+    }
+	#gameContainer {
+        width: 100vw;
+        height: 100vh;
+      }
+  </style>
+</head>
+
+<body>
+
+	<div id="gameContainer"></div>
+
+  <img src="games4king.png" id="games4king">
+  <img src="android.png" id="android">
+  <canvas id="unity-canvas"></canvas>
+  <div id="unity-loading-bar">
+    <div id="unity-progress-bar">
+    </div>
+  </div>
+  <script src="Build/Game.loader.js"></script>
+  <script>
+    const maxPixelRatioMobile = 2.0;
+    const maxPixelRatioDesktop = 1.5;
+
+    var isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+    var maxDevicePixelRatio = isMobile? maxPixelRatioMobile: maxPixelRatioDesktop;
+    var pixelRatio = Math.min(window.devicePixelRatio, maxDevicePixelRatio);
+
+    var buildUrl = "Build";
+    var loaderUrl = buildUrl + "/Game.loader.js";
+    var config = {
+      dataUrl: buildUrl + "/Game.data.unityweb",
+      frameworkUrl: buildUrl + "/Game.framework.js.unityweb",
+      codeUrl: buildUrl + "/Game.wasm.unityweb",
+      streamingAssetsUrl: "StreamingAssets",
+      companyName: "DefaultCompany",
+      productName: "Game",
+      productVersion: "1.0",
+      devicePixelRatio: pixelRatio
+    };
+
+    var canvas = document.querySelector("#unity-canvas");
+    var loadingBar = document.querySelector("#unity-loading-bar");
+    var progressBar = document.querySelector("#unity-progress-bar");
+
+    var script = document.createElement("script");
+    script.src = loaderUrl;
+    script.onload = function() {
+      createUnityInstance(canvas, config, function(progress) {
+        progressBar.style.width = 100 * progress + "%";
+      }).then(function(unityInstance) {
+        loadingBar.style.display = "none";
+      }).catch(function(message) {
+        alert(message);
+      });
+    };
+    document.body.appendChild(script);
+	window.parent.postMessage({v1: 'gd_ad_init', v2: 'Assign to value2'}, "*");
+    function ad4game_ad_call()
+    {
+		console.log("web...name...."+extractHostname(window.document.referrer));
+		//window.parent.postMessage({v1: 'gd_main_ad_calling', v2: 'Assign to value2'}, "*");
+		var game_container = document.querySelector("#gameContainer");
+        var a4g_script = document.createElement('script');
+    	a4g_script.src = "//video.a4g.com/www/delivery/video.php?zoneid=53223&width="+(window.innerWidth-10)+"&height="+(window.innerHeight-10)+"&siteurl=http://www.games4king.com/&wrapper=gameContainer&autoplay=1";
+    	game_container.appendChild(a4g_script);
+    }
+	function gd_ad_call()
+    {
+		window.parent.postMessage({v1: 'gd_main_ad_calling', v2: 'Assign to value2'}, "*");
+		console.log("my...check.website"+window.parent.location);
+		
+		if(extractHostname(window.document.referrer).includes("games4king"))
+		{
+			console.log("my..website"+extractHostname(window.document.referrer));
+		}
+		else
+		{
+			console.log("sorry..my..website"+extractHostname(window.document.referrer));
+			setTimeout(ad4game_ad_call, 60000);
+		}
+    }
+	function adinplay_ad_call()
+    {
+		window.parent.postMessage({v1: 'gd_main_ad_calling', v2: 'Assign to value2'}, "*");
+		//window.parent.postMessage({v1: 'gd_RV_ad_calling', v2: 'Assign to value2'}, "*");
+	}
+	function extractHostname(url) 
+    {
+        var hostname;
+        //find & remove protocol (http, ftp, etc.) and get hostname
+    
+        if (url.indexOf("//") > -1) {
+            hostname = url.split('/')[2];
+        }
+        else {
+            hostname = url.split('/')[0];
+        }
+    
+        //find & remove port number
+        hostname = hostname.split(':')[0];
+        //find & remove "?"
+        hostname = hostname.split('?')[0];
+    
+        return hostname;
+    }
+  </script>
+</body>
+
+</html>
